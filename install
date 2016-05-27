@@ -38,10 +38,31 @@ function askForDirectoryPath
   echo $chosenDir
 }
 
+function createFolders
+{
+  local rootDir=$1
+  local dataDir="${rootDir}/invrepo-data"
+  if [ -d "${dataDir}" ]; then
+    echo "Data directory exists already."
+    exit 1
+  fi
+  local subDirs=("import" "export" "repository/files" "repository/metadata")
+  for ((i=0; i<${#subDirs[@]}; i++))
+  do
+    local pathToCreate="${dataDir}/${subDirs[$i]}"
+    mkdir -p "${pathToCreate}" &> /dev/null
+    if [ $? -ne 0 ]; then
+      echo "Creating directory ${pathToCreate} was not possible - check credentials."
+      exit 1
+    fi
+  done
+}
+
 # checking required dependencies
 checkDeps
 
 # retrieving directory path from the user
 rootDir=$(askForDirectoryPath)
 
-echo $rootDir
+# building hierarchy of folders under given rootDir
+createFolders "${rootDir}"
