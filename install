@@ -58,6 +58,14 @@ function createFolders
   done
 }
 
+configPath="./config"
+
+# checking if the installation has already been run
+if [ -f "${configPath}" ]; then
+  echo "It seems like the installation process has already been completed."
+  exit 1
+fi
+
 # checking required dependencies
 checkDeps
 
@@ -73,7 +81,6 @@ dataRootDir="${rootDir%/}/invrepo-data"
 cp "./empty.db" "${dataRootDir}/repository/metadata/metadata.db"
 
 # creating a config file
-configPath="./config"
 echo "#!/bin/bash" > "${configPath}"
 echo 'dataRootDir="'${dataRootDir}'"' >> "${configPath}"
 
