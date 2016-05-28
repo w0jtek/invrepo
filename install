@@ -69,5 +69,11 @@ createFolders "${rootDir}"
 clear
 
 # initializing an empty sqlite database
-cp "./empty.db" "${rootDir}/invrepo-data/repository/metadata/metadata.db"
+dataRootDir="${rootDir%/}/invrepo-data"
+cp "./empty.db" "${dataRootDir}/repository/metadata/metadata.db"
+
+# creating a config file
+configPath="./config"
+echo "#!/bin/bash" > "${configPath}"
+echo 'dataRootDir="'${dataRootDir}'"' >> "${configPath}"
 
