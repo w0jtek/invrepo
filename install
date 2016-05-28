@@ -7,7 +7,7 @@ function commandExists
 
 function checkDeps
 {
-  local depRequired=("dialog" "sqlite3")
+  local depRequired=("dialog" "sqlite3" "openssl")
   local depMissing=()
   for ((i=0; i<${#depRequired[@]}; i++))
   do
@@ -30,7 +30,7 @@ function checkDeps
 
 function askForDirectoryPath
 {
-  chosenDir=$(dialog --stdout --title "Please choose a directory for the storage" --dselect $HOME 10 20)
+  chosenDir=$(dialog --stdout --title "Please choose a directory for the storage" --dselect $HOME 10 50)
   if [ $? -ne 0 ]; then
     echo "Directory path was not supplied."
     exit 1
@@ -66,3 +66,8 @@ rootDir=$(askForDirectoryPath)
 
 # building hierarchy of folders under given rootDir
 createFolders "${rootDir}"
+clear
+
+# initializing an empty sqlite database
+cp "./empty.db" "${rootDir}/invrepo-data/repository/metadata/metadata.db"
+
