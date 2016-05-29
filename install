@@ -78,7 +78,13 @@ clear
 
 # initializing an empty sqlite database
 dataRootDir="${rootDir%/}/invrepo-data"
-cp "./empty.db" "${dataRootDir}/repository/metadata/metadata.db"
+databasePath="${dataRootDir}/repository/metadata/metadata.db"
+databasePathEnc="${databasePath}.enc"
+cp "./empty.db" "${databasePath}"
+
+# encrypting the database using AES algorithm and removing the original file
+openssl aes-256-cbc -in "${databasePath}" -out "${databasePathEnc}"
+rm "${databasePath}"
 
 # creating a config file
 echo "#!/bin/bash" > "${configPath}"

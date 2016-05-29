@@ -1,0 +1,31 @@
+#!/bin/bash
+
+configFile="./config"
+if [ ! -f "${configFile}" ]; then
+  echo "Config file is missing. Please run the installation script first."
+  exit 1
+fi
+
+source "${configFile}"
+
+openDbPath="${dataRootDir}/repository/metadata/metadata.db"
+encDbPath="${openDbPath}.enc"
+
+importFilePath=$1
+
+if [ -z "${importFilePath}" ]; then
+  echo "Import file path argument is missing."
+  exit 1
+fi
+
+if [ ! -f "${importFilePath}" ]; then
+  echo "The file was not found."
+  exit 1
+fi
+
+read -s -p "Password: " password
+openssl aes-256-cbc -d -in "${encDbPath}" -out "${openDbPath}" -pass "pass:${password}" 2>/dev/null
+if [ $? -ne 0 ]; then
+  echo "The given password is incorrect."
+  exit 1
+fi
